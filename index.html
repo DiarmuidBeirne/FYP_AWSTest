@@ -1,0 +1,118 @@
+<html>
+<head>
+    <meta charset="utf-8">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/twitter-bootstrap/3.3.6/css/bootstrap.min.css">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/bootstrap-table/1.10.1/bootstrap-table.min.css">
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/bootstrap-table/1.12.1/bootstrap-table.min.js"></script>
+
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/2.2.4/jquery.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/twitter-bootstrap/3.3.6/js/bootstrap.min.js"></script>
+    
+
+    </head>
+
+    <body>
+    <h1>Charger List</h1>
+        <div id="chargerList">
+        </div>
+        
+        <!--<table id="table">
+    <thead>
+        <tr>
+            <th data-field="chargerID">ID</th>
+            <th data-field="chargerName">Name</th>
+            <th data-field="costPerHour">Price (per hour)</th>
+            <th data-field="ownerID">Owner ID</th>
+            <th data-field="type">Price (per hour)</th>
+        </tr>
+    </thead>
+</table>-->
+        
+        <h2> Add new Charger</h2>
+        
+        
+        <form>
+  <div class="form-group">
+    <label for="chargerNameInput">Charger ID</label>
+    <input  id="chargerIDInput" class="form-control" aria- placeholder="Enter a unique Integer">
+  </div>
+            
+            <div class="form-group">
+    <label for="chargerNameInput">Charger Name</label>
+    <input  id="chargerNameInput" class="form-control" aria- placeholder="Enter a name for this charger">
+  </div>
+            
+            <div class="form-group">
+    <label for="chargerNameInput">Cost Per Hour</label>
+    <input  id="costPerHourInput" class="form-control" aria- placeholder="€/hour">
+  </div>
+            
+            <div class="form-group">
+    <label for="chargerNameInput">Type</label>
+    <input  id="typeInput" class="form-control" aria- placeholder="Type of Charger">
+  </div>
+            
+            <div class="form-group">
+    <label for="chargerNameInput">Owner ID</label>
+    <input  id="ownerIDInput" class="form-control" aria- placeholder="Owner's ID">
+  </div>
+  
+  
+  <button id="submitButton" type="submit" class="btn btn-primary">Submit</button>
+</form>
+    </body>
+    
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.3.1/jquery.min.js"></script>
+    
+    <script type="text/javascript">
+        var $table = $('#table');
+        var API_URL = 'https://61rek4ywu6.execute-api.us-east-2.amazonaws.com/live/-charger'
+    $(document).ready(function(){
+        $.ajax({
+            type:'GET', 
+            url: API_URL,
+            
+            success: function(data){
+                $('#chargerList').html('');
+                
+                data.Items.forEach(function(charger){
+                    
+                    $('#chargerList').append('<p> <b>Charger ID: </b>' + charger.chargerID + ' <b>Name: </b>' + charger.chargerName + ' <b>Owner ID: </b>' + charger.ownerID + ' <b>Cost per Hour: </b>' + charger.costPerHour + '<b> Type: </b>' + charger.type+ '</p>');
+                })
+                console.log(data.Items);
+                
+                $(function () {
+                $('#table').bootstrapTable({
+                    data: data.Items
+                });
+                            });
+            }
+            
+            
+        });
+    });
+        
+        $('#submitButton').on('click', function(){
+            
+            $.ajax({
+                type: 'POST',
+                url: API_URL,
+                data: JSON.stringify({"chargerID": parseInt($('#chargerIDInput').val()),
+                            "chargerName": $('#chargerNameInput').val(),
+                                      "ownerID": parseInt($('#ownerIDInput').val()),
+                                      "costPerHour": parseInt($('#costPerHourInput').val()),
+                                      "type": parseInt($('#typeInput').val())}),
+                contentType:"application/json",
+                
+                success: function(data){
+                    console.log(data);
+                    location.reload();
+                }
+                
+            });
+            return false;
+        });
+    
+    
+    </script>
+</html>
